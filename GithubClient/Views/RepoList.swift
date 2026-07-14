@@ -8,20 +8,35 @@
 import SwiftUI
 
 struct RepoList: View {
+    @StateObject private var viewController = RepoListViewController()
+    
     var body: some View {
         NavigationStack {
-            VStack {
-                RepoItem()
-                RepoItem()
-                RepoItem()
-                RepoItem()
-                RepoItem()
+            Group {
+                if viewController.isLoading {
+                    ProgressView("Cargando repositorios...")
+                } else if let errorMsg = viewController.errorMsg {
+                    Text(errorMsg)
+                        .foregroundStyle(.red)
+                        .padding()
+                } else {
+                    VStack {
+                        List(viewController.repositories) {repo in
+                            Repoitem(repository: repo)
+                        }
+                    }
+                }
             }
             .navigationTitle("Repositorios")
-            .navigationBarTitleDisplayMode(.inline)
+        }
+        .onAppear {
+            Task {
+                await viewController.loadRepositories()
+            }
         }
     }
 }
+
 #Preview {
     RepoList()
 }
