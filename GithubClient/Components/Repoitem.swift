@@ -2,7 +2,7 @@
 //  Repoitem.swift
 //  GithubClient
 //
-//  Created by Usuario invitado on 7/7/26.
+
 //
 
 import SwiftUI
